@@ -1,0 +1,45 @@
+from selenium import webdriver
+import time
+import requests
+from pyquery import PyQuery as pq
+import json
+driver = webdriver.PhantomJS()
+driver.get('http://weixin.sogou.com')
+driver.find_element_by_id('upquery').send_keys('少年商学院')
+time.sleep(2)
+driver.find_element_by_class_name('swz2').click()
+time.sleep(2)
+r=requests.get(driver.current_url)
+doc = pq(r.content)
+ur=doc('a[uigs="account_name_0"]').attr('href')
+browser = webdriver.PhantomJS()
+browser.get(ur)
+time.sleep(2)
+html = browser.execute_script("return document.documentElement.outerHTML")
+time.sleep(1)
+doc2 = pq(html)
+artshtml=doc2('div[class="weui_msg_card"]')
+time.sleep(1)
+arthtml = artshtml('div[class="weui_media_bd"]')
+time.sleep(1)
+artlist=[]
+for i in range(10):
+    artdict={}
+    a=arthtml('h4[class="weui_media_title"]').eq(i).attr('hrefs')
+    url = 'http://mp.weixin.qq.com' + a
+    title = arthtml('h4[class="weui_media_title"]').eq(i).text()
+    summary = arthtml('p[class="weui_media_desc"]').eq(i).text()
+    browser.get(url)
+    time.sleep(2)
+    html = browser.execute_script("return document.documentElement.outerHTML")
+    doc3 = pq(html)
+    readnum = doc3('span[id="sg_readNum3"]').text()
+    likenum = doc3('span[id="sg_likeNum3"]').text()
+    artdict['readnum'] = readnum
+    artdict['title'] = title
+    artdict['likenum'] = likenum
+    artdict['summary'] = summary
+    artlist.append(artdict)
+artlist.sort(key=lambda k: (k.get('readnum', 0)))
+for i in range(10):
+    print(artlist[i])
