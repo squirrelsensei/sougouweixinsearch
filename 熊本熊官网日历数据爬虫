@@ -1,0 +1,53 @@
+from selenium import webdriver
+import requests
+import re
+from pyquery import PyQuery as pq
+driver = webdriver.PhantomJS()
+callist2011=[]
+callist2012=[]
+callist2013=[]
+callist2014=[]
+callist2015=[]
+callist2016=[]
+callist2017=[]
+for i in range(12):
+    i=i+1
+    url='http://kumamon-official.jp/schedule?t_year=2011&t_month='+str(i)
+    r = requests.get(url)
+    doc = pq(r.content)
+    ur1 = doc('table[id="cal"]')
+    ur2 = str(ur1('img'))
+    a = re.findall(r'img', ur2)
+    b = a.count('img')
+    callist2011.append(b)
+for i in range(12):
+    i=i+1
+    url='http://kumamon-official.jp/schedule?t_year=2012&t_month='+str(i)
+    r = requests.get(url)
+    doc = pq(r.content)
+    ur1 = doc('table[id="cal"]')
+    ur2 = str(ur1('img'))
+    a = re.findall(r'img', ur2)
+    b = a.count('img')
+    callist2012.append(b)
+for i in range(12):
+    i=i+1
+    url='http://kumamon-official.jp/schedule?t_year=2013&t_month='+str(i)
+    r = requests.get(url)
+    doc = pq(r.content)
+    ur1 = doc('table[id="cal"]')
+    ur2 = str(ur1('img'))
+    a = re.findall(r'img', ur2)
+    b = a.count('img')
+    callist2013.append(b)
+for i in range(12):
+    i=i+1
+    url='http://kumamon-official.jp/schedule?t_year=2014&t_month='+str(i)
+    r = requests.get(url)
+    doc = pq(r.content)
+    ur1 = doc('table[id="cal"]')
+    ur2 = str(ur1('img'))
+    a = re.findall(r'img', ur2)
+    b = a.count('img')
+    callist2014.append(b)
+print(callist2011,callist2012,callist2013,callist2014)
